@@ -30,7 +30,8 @@ def create_instance(image: str, user_id: int, challenge_id: str, public_key: str
     network_name = f"ctf-net-{instance_id[:12]}"
     volume_name = f"ctf-home-{user_id}-{challenge_id}"
 
-    network = client.networks.create(name=network_name, internal=True)
+    # Create isolated network (not internal so SSH port mapping works)
+    network = client.networks.create(name=network_name, internal=False)
 
     labels = {
         "ctf.instance_id": instance_id,

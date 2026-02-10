@@ -92,7 +92,7 @@ function renderChallenges(items) {
       <p style="margin-top:12px;padding:8px;background:#1d2b3a;border-radius:6px;font-size:0.9em;">
         💡 <strong>Tip:</strong> After starting, check <code>/challenge/instructions.txt</code> inside the container
       </p>
-      <button class="button" onclick="startInstance('${item.id}')">Start</button>
+      <button class="button" onclick="startInstance('${item.id}', this)" id="start-${item.id}">Start Instance</button>
     `;
     container.appendChild(div);
   });
@@ -120,13 +120,17 @@ function renderInstances(items) {
       <p>SSH: <code>${ssh}</code></p>
       <button class="button" onclick="openTerminal('${item.id}')">Browser Terminal</button>
       <button class="button" onclick="quickSubmit('${item.challenge_id}')">Submit Flag</button>
-      <button class="button secondary" onclick="stopInstance('${item.id}')">Stop</button>
+      <button class="button secondary" onclick="stopInstance('${item.id}', this)" id="stop-${item.id}">Stop</button>
     `;
     container.appendChild(div);
   });
 }
 
-async function startInstance(challengeId) {
+async function startInstance(challengeId, buttonEl) {
+  if (buttonEl) {
+    buttonEl.disabled = true;
+    buttonEl.textContent = "Starting...";
+  }
   try {
     await api("/api/instances/start", {
       method: "POST",
@@ -136,15 +140,27 @@ async function startInstance(challengeId) {
     await loadDashboard();
   } catch (err) {
     alert(`Failed to start instance: ${err.message}`);
+    if (buttonEl) {
+      buttonEl.disabled = false;
+      buttonEl.textContent = "Start Instance";
+    }
   }
 }
 
-async function stopInstance(instanceId) {
+async function stopInstance(instanceId, buttonEl) {
+  if (buttonEl) {
+    buttonEl.disabled = true;
+    buttonEl.textContent = "Stopping...";
+  }
   try {
     await api(`/api/instances/stop?instance_id=${instanceId}`, { method: "POST" });
     await loadDashboard();
   } catch (err) {
     alert(`Failed to stop instance: ${err.message}`);
+    if (buttonEl) {
+      buttonEl.disabled = false;
+      buttonEl.textContent = "Stop";
+    }
   }
 }
 
