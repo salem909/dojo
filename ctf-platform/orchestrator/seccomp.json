@@ -8,7 +8,7 @@
   ],
   "syscalls": [
     {
-      "names": ["clone", "unshare", "mount", "ptrace", "kexec_load"],
+      "names": ["unshare", "mount", "ptrace", "kexec_load"],
       "action": "SCMP_ACT_ERRNO"
     }
   ]
