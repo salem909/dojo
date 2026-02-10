@@ -229,26 +229,32 @@ async def terminal_proxy(websocket: WebSocket, instance_id: str):
         try:
             async with websockets.connect(orch_url, extra_headers=headers) as orch_ws:
                 async def client_to_orch():
-                    while True:
-                        message = await websocket.receive()
-                        data = message.get("bytes")
-                        if data is None:
-                            text = message.get("text")
-                            if text is None:
-                                continue
-                            data = text.encode("utf-8")
-                        await orch_ws.send(data)
+                    try:
+                        while True:
+                            message = await websocket.receive()
+                            data = message.get("bytes")
+                            if data is None:
+                                text = message.get("text")
+                                if text is None:
+                                    continue
+                                data = text.encode("utf-8")
+                            await orch_ws.send(data)
+                    except (WebSocketDisconnect, Exception):
+                        pass
 
                 async def orch_to_client():
-                    while True:
-                        data = await orch_ws.recv()
-                        if isinstance(data, str):
-                            await websocket.send_text(data)
-                        else:
-                            await websocket.send_bytes(data)
+                    try:
+                        while True:
+                            data = await orch_ws.recv()
+                            if isinstance(data, str):
+                                await websocket.send_text(data)
+                            else:
+                                await websocket.send_bytes(data)
+                    except Exception:
+                        pass
 
-                await asyncio.gather(client_to_orch(), orch_to_client())
-        except WebSocketDisconnect:
-            return
+                await asyncio.gather(client_to_orch(), orch_to_client(), return_exceptions=True)
+        except (WebSocketDisconnect, Exception):
+            pass
     finally:
         db.close()

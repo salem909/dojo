@@ -110,7 +110,57 @@ ssh-keygen -t ed25519 -C "ctf-user"
 
 Then upload the contents of your public key file (usually `~/.ssh/id_ed25519.pub`) into the dashboard.
 
-## Browser Terminal
+## Troubleshooting
 
-- Use the “Browser Terminal” button on an instance card.
-- The terminal uses xterm.js via a websocket proxy.
+### Challenge container fails to start
+
+Check orchestrator logs:
+```bash
+docker compose logs orchestrator
+```
+
+Common issues:
+- Challenge images not built: run `./challenges/build_all.sh`
+- Seccomp profile path incorrect: verify `/app/seccomp.json` is mounted
+
+### SSH connection refused
+
+- Confirm container is running: `docker ps | grep ctf-`
+- Use the **host-mapped port** shown in dashboard, not 2222
+- Verify public key was saved in dashboard before starting instance
+- Check container logs: `docker logs <container-name>`
+
+### Browser terminal not connecting
+
+- Check browser console for WebSocket errors
+- Verify backend is reachable at the API base URL
+- Confirm token is valid (re-login if expired)
+
+### Instances not cleaned up
+
+- Check GC is running: `docker compose logs orchestrator | grep garbage`
+- Manually clean: `docker ps -a --filter label=ctf.instance_id`
+- Remove stuck containers: `docker rm -f <container-name>`
+
+## Production Deployment
+
+For production use:
+
+1. **Use a reverse proxy** (Caddy, Nginx) with TLS certificates
+2. **Change default secrets**: `SECRET_KEY`, `ORCHESTRATOR_TOKEN`
+3. **Restrict CORS origins** in `backend/app/main.py`
+4. **Use PostgreSQL** instead of SQLite for multi-node setups
+5. **Set resource limits** appropriate for your hardware
+6. **Enable log aggregation** for monitoring
+
+Example Caddy config:
+```
+dojo.example.com {
+    reverse_proxy http://localhost:8080
+}
+
+api.dojo.example.com {
+    reverse_proxy http://localhost:8000
+}
+```
+

@@ -8,7 +8,7 @@ class Settings:
         self.mem_limit = os.environ.get("MEM_LIMIT", "256m")
         self.max_runtime_seconds = int(os.environ.get("MAX_RUNTIME_SECONDS", "3600"))
         self.seccomp_profile_path = os.environ.get(
-            "SECCOMP_PROFILE_PATH", "/workspaces/dojo/ctf-platform/orchestrator/seccomp.json"
+            "SECCOMP_PROFILE_PATH", "/app/seccomp.json"
         )
 
 

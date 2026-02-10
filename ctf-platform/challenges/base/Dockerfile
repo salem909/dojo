@@ -24,6 +24,7 @@ RUN useradd -m -s /bin/bash ctf
 
 RUN mkdir -p /run/sshd /home/ctf/.ssh /challenge
 
+COPY sshd_config /etc/ssh/sshd_config
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod 755 /usr/local/bin/start.sh
 

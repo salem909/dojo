@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8000";
+const API_BASE = window.location.protocol === "file:" ? "http://localhost:8000" : `${window.location.protocol}//${window.location.hostname}:8000`;
 
 function setToken(token) {
   localStorage.setItem("token", token);
@@ -116,17 +116,25 @@ function renderInstances(items) {
 }
 
 async function startInstance(challengeId) {
-  await api("/api/instances/start", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ challenge_id: challengeId }),
-  });
-  loadDashboard();
+  try {
+    await api("/api/instances/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ challenge_id: challengeId }),
+    });
+    await loadDashboard();
+  } catch (err) {
+    alert(`Failed to start instance: ${err.message}`);
+  }
 }
 
 async function stopInstance(instanceId) {
-  await api(`/api/instances/stop?instance_id=${instanceId}`, { method: "POST" });
-  loadDashboard();
+  try {
+    await api(`/api/instances/stop?instance_id=${instanceId}`, { method: "POST" });
+    await loadDashboard();
+  } catch (err) {
+    alert(`Failed to stop instance: ${err.message}`);
+  }
 }
 
 async function submitFlag() {
@@ -147,12 +155,16 @@ async function submitFlag() {
 
 async function saveKey() {
   const publicKey = document.getElementById("public-key").value;
-  await api("/api/profile/key", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ public_key: publicKey }),
-  });
-  alert("Key saved.");
+  try {
+    await api("/api/profile/key", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ public_key: publicKey }),
+    });
+    alert("Key saved.");
+  } catch (err) {
+    alert(`Failed to save key: ${err.message}`);
+  }
 }
 
 function openTerminal(instanceId) {
@@ -174,8 +186,18 @@ function startTerminal() {
   });
   term.open(document.getElementById("terminal"));
 
-  const ws = new WebSocket(`ws://localhost:8000/ws/terminal/${instanceId}?token=${token}`);
+  const wsProto = window.location.protocol === "https:" ? "wss:" : "ws:";
+  const wsHost = window.location.hostname;
+  const ws = new WebSocket(`${wsProto}//${wsHost}:8000/ws/terminal/${instanceId}?token=${token}`);
   ws.binaryType = "arraybuffer";
+
+  ws.onerror = (error) => {
+    term.write("\r\n\x1b[31mConnection error\x1b[0m\r\n");
+  };
+
+  ws.onclose = () => {
+    term.write("\r\n\x1b[33mConnection closed\x1b[0m\r\n");
+  };
 
   ws.onmessage = (event) => {
     if (event.data instanceof ArrayBuffer) {
@@ -186,6 +208,8 @@ function startTerminal() {
   };
 
   term.onData((data) => {
-    ws.send(data);
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(data);
+    }
   });
 }

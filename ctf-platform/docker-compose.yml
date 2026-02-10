@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     build: ./backend
@@ -24,10 +22,10 @@ services:
       - CPU_LIMIT=0.5
       - MEM_LIMIT=256m
       - MAX_RUNTIME_SECONDS=3600
-      - SECCOMP_PROFILE_PATH=/workspaces/dojo/ctf-platform/orchestrator/seccomp.json
+      - SECCOMP_PROFILE_PATH=/app/seccomp.json
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./orchestrator/seccomp.json:/workspaces/dojo/ctf-platform/orchestrator/seccomp.json:ro
+      - ./orchestrator/seccomp.json:/app/seccomp.json:ro
     ports:
       - "8001:8001"
 

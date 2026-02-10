@@ -82,20 +82,31 @@ def stop_instance(instance_id: str) -> None:
     container = find_instance_container(instance_id)
     if not container:
         return
-    network_name = None
-    for net_name, net_data in container.attrs.get("NetworkSettings", {}).get("Networks", {}).items():
-        if net_name.startswith("ctf-net-"):
-            network_name = net_name
-            break
-    container.stop(timeout=10)
-    container.remove(v=True)
-    if network_name:
-        try:
-            client = docker_client()
-            net = client.networks.get(network_name)
-            net.remove()
-        except docker.errors.NotFound:
-            pass
+    
+    try:
+        network_name = None
+        container.reload()
+        for net_name in container.attrs.get("NetworkSettings", {}).get("Networks", {}).keys():
+            if net_name.startswith("ctf-net-"):
+                network_name = net_name
+                break
+        
+        if container.status == "running":
+            container.stop(timeout=10)
+        container.remove(v=True, force=True)
+        
+        if network_name:
+            try:
+                client = docker_client()
+                net = client.networks.get(network_name)
+                net.remove()
+            except docker.errors.NotFound:
+                pass
+    except docker.errors.NotFound:
+        pass
+    except Exception as e:
+        # Log but don't fail if cleanup is incomplete
+        print(f"Warning: cleanup failed for {instance_id}: {e}")
 
 
 def list_instances(user_id: int) -> list[dict[str, Any]]:

@@ -9,7 +9,7 @@ if [[ -n "${PUBLIC_KEY:-}" ]]; then
 fi
 
 mkdir -p /run/sshd
-/usr/sbin/sshd -D -e -p 2222 &
+/usr/sbin/sshd -e -p 2222 &
 
 chmod -R a+rX /challenge || true
 chmod -R go-w /challenge || true
