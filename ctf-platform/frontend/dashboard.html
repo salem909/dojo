@@ -31,10 +31,11 @@
 
       <section class="card">
         <h2>Submit Flag</h2>
-        <label>Challenge ID<input id="flag-challenge" /></label>
-        <label>Flag<input id="flag-value" /></label>
+        <p style="color:var(--muted);font-size:0.9em;margin-bottom:12px;">Found the flag? Enter it below. You can also click "Submit Flag" on an instance above to auto-fill the challenge ID.</p>
+        <label>Challenge ID<input id="flag-challenge" placeholder="e.g., challenge01" /></label>
+        <label>Flag<input id="flag-value" placeholder="e.g., FLAG{...}" /></label>
         <button class="button" onclick="submitFlag()">Submit</button>
-        <p id="flag-status"></p>
+        <p id="flag-status" style="margin-top:12px;font-weight:600;"></p>
       </section>
     </main>
     <script src="app.js"></script>

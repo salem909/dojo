@@ -89,6 +89,9 @@ function renderChallenges(items) {
       <h3>${item.id}: ${item.name}</h3>
       <p>${item.description}</p>
       <p><strong>Categories:</strong> ${item.categories.join(", ")}</p>
+      <p style="margin-top:12px;padding:8px;background:#1d2b3a;border-radius:6px;font-size:0.9em;">
+        💡 <strong>Tip:</strong> After starting, check <code>/challenge/instructions.txt</code> inside the container
+      </p>
       <button class="button" onclick="startInstance('${item.id}')">Start</button>
     `;
     container.appendChild(div);
@@ -98,6 +101,10 @@ function renderChallenges(items) {
 function renderInstances(items) {
   const container = document.getElementById("instances");
   container.innerHTML = "";
+  if (items.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted);">No running instances. Start a challenge above.</p>';
+    return;
+  }
   items.forEach((item) => {
     const div = document.createElement("div");
     div.className = "card";
@@ -107,8 +114,12 @@ function renderInstances(items) {
     div.innerHTML = `
       <h3>${item.challenge_id}</h3>
       <p>Status: ${item.status}</p>
+      <p style="margin:8px 0;padding:8px;background:#1d2b3a;border-radius:6px;font-size:0.9em;">
+        🚀 <strong>Quick Start:</strong> Open terminal → <code>cat /challenge/instructions.txt</code>
+      </p>
       <p>SSH: <code>${ssh}</code></p>
       <button class="button" onclick="openTerminal('${item.id}')">Browser Terminal</button>
+      <button class="button" onclick="quickSubmit('${item.challenge_id}')">Submit Flag</button>
       <button class="button secondary" onclick="stopInstance('${item.id}')">Stop</button>
     `;
     container.appendChild(div);
@@ -137,6 +148,12 @@ async function stopInstance(instanceId) {
   }
 }
 
+function quickSubmit(challengeId) {
+  document.getElementById("flag-challenge").value = challengeId;
+  document.getElementById("flag-value").focus();
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
 async function submitFlag() {
   const challengeId = document.getElementById("flag-challenge").value;
   const flagValue = document.getElementById("flag-value").value;
@@ -147,8 +164,13 @@ async function submitFlag() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ challenge_id: challengeId, flag: flagValue }),
     });
-    status.textContent = resp.correct ? "Correct!" : "Incorrect.";
+    status.style.color = resp.correct ? "var(--accent)" : "var(--accent-2)";
+    status.textContent = resp.correct ? "✅ Correct! Flag accepted." : "❌ Incorrect flag. Try again.";
+    if (resp.correct) {
+      await loadDashboard();
+    }
   } catch (err) {
+    status.style.color = "#ff6b6b";
     status.textContent = `Submit failed: ${err.message}`;
   }
 }
@@ -185,11 +207,18 @@ function startTerminal() {
     fontFamily: "Fira Mono, monospace",
   });
   term.open(document.getElementById("terminal"));
+  
+  term.write("\r\n\x1b[36mConnecting to challenge container...\x1b[0m\r\n");
+  term.write("\x1b[33mTip: Press Enter if you don't see a prompt\x1b[0m\r\n\r\n");
 
   const wsProto = window.location.protocol === "https:" ? "wss:" : "ws:";
   const wsHost = window.location.hostname;
   const ws = new WebSocket(`${wsProto}//${wsHost}:8000/ws/terminal/${instanceId}?token=${token}`);
   ws.binaryType = "arraybuffer";
+  
+  ws.onopen = () => {
+    term.write("\x1b[32m✓ Connected\x1b[0m\r\n\r\n");
+  };
 
   ws.onerror = (error) => {
     term.write("\r\n\x1b[31mConnection error\x1b[0m\r\n");
