@@ -1,5 +1,7 @@
 import datetime
+import json
 import uuid
+from pathlib import Path
 from typing import Any
 
 import docker
@@ -13,6 +15,12 @@ def _nano_cpus(cpu_limit: float) -> int:
 
 def docker_client() -> docker.DockerClient:
     return docker.from_env()
+
+
+def _load_seccomp_profile() -> str:
+    # Docker API expects the seccomp profile JSON string, not a file path.
+    data = Path(settings.seccomp_profile_path).read_text(encoding="utf-8")
+    return json.dumps(json.loads(data))
 
 
 def create_instance(image: str, user_id: int, challenge_id: str, public_key: str | None) -> dict:
@@ -30,6 +38,8 @@ def create_instance(image: str, user_id: int, challenge_id: str, public_key: str
         "ctf.started_at": datetime.datetime.utcnow().isoformat(),
     }
 
+    seccomp_profile = _load_seccomp_profile()
+
     container = client.containers.run(
         image=image,
         detach=True,
@@ -42,7 +52,7 @@ def create_instance(image: str, user_id: int, challenge_id: str, public_key: str
         mem_limit=settings.mem_limit,
         nano_cpus=_nano_cpus(settings.cpu_limit),
         pids_limit=128,
-        security_opt=[f"seccomp={settings.seccomp_profile_path}"],
+        security_opt=[f"seccomp={seccomp_profile}"],
         cap_drop=["ALL"],
         cap_add=["CHOWN", "SETUID", "SETGID", "NET_BIND_SERVICE"],
     )

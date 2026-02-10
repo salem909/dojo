@@ -100,6 +100,16 @@ docker build -t ctf/challenge11:latest ./challenges/challenge11
 - Upload your public key in the dashboard.
 - Start an instance and use the provided `ssh -p PORT ctf@HOST` command.
 
+## Generate an SSH Key
+
+If you do not already have one, generate a key pair on your machine:
+
+```bash
+ssh-keygen -t ed25519 -C "ctf-user"
+```
+
+Then upload the contents of your public key file (usually `~/.ssh/id_ed25519.pub`) into the dashboard.
+
 ## Browser Terminal
 
 - Use the “Browser Terminal” button on an instance card.
