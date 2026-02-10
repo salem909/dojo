@@ -230,7 +230,13 @@ async def terminal_proxy(websocket: WebSocket, instance_id: str):
             async with websockets.connect(orch_url, extra_headers=headers) as orch_ws:
                 async def client_to_orch():
                     while True:
-                        data = await websocket.receive_bytes()
+                        message = await websocket.receive()
+                        data = message.get("bytes")
+                        if data is None:
+                            text = message.get("text")
+                            if text is None:
+                                continue
+                            data = text.encode("utf-8")
                         await orch_ws.send(data)
 
                 async def orch_to_client():
