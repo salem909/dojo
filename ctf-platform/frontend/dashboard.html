@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="row">
+        <h1>Dashboard</h1>
+        <button class="button secondary" onclick="logout()">Logout</button>
+      </header>
+
+      <section class="card">
+        <h2>Public Key (SSH)</h2>
+        <textarea id="public-key" rows="4" placeholder="ssh-ed25519 AAAA..."></textarea>
+        <button class="button" onclick="saveKey()">Save Key</button>
+      </section>
+
+      <section class="card">
+        <h2>Challenges</h2>
+        <div id="challenges"></div>
+      </section>
+
+      <section class="card">
+        <h2>Instances</h2>
+        <div id="instances"></div>
+      </section>
+
+      <section class="card">
+        <h2>Submit Flag</h2>
+        <label>Challenge ID<input id="flag-challenge" /></label>
+        <label>Flag<input id="flag-value" /></label>
+        <button class="button" onclick="submitFlag()">Submit</button>
+        <p id="flag-status"></p>
+      </section>
+    </main>
+    <script src="app.js"></script>
+    <script>
+      loadDashboard();
+    </script>
+  </body>
+</html>

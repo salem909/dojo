@@ -1,0 +1,8 @@
+{
+  "id": "challenge08",
+  "name": "Basic Scripting",
+  "description": "Write a quick script to extract a token from logs.",
+  "categories": ["Basic scripting"],
+  "image": "ctf/challenge08:latest",
+  "flag": "FLAG{chal08-scripting}"
+}

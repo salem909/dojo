@@ -1,0 +1,8 @@
+{
+  "id": "challenge04",
+  "name": "Piping and Redirection",
+  "description": "Capture a token from stderr with pipes and redirection.",
+  "categories": ["Piping", "Redirection", "File descriptor basics", "Shell usage"],
+  "image": "ctf/challenge04:latest",
+  "flag": "FLAG{chal04-fd-redir}"
+}

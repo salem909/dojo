@@ -1,0 +1,8 @@
+{
+  "id": "challenge06",
+  "name": "Reversing and Crypto",
+  "description": "Decode a base64+XOR token with a provided script.",
+  "categories": ["Basic reversing", "Simple cryptography"],
+  "image": "ctf/challenge06:latest",
+  "flag": "FLAG{chal06-crypto}"
+}

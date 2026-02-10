@@ -1,0 +1,8 @@
+{
+  "id": "challenge02",
+  "name": "File Permissions",
+  "description": "Execute a helper with restricted permissions to reveal the token.",
+  "categories": ["File permissions", "Permissions & users"],
+  "image": "ctf/challenge02:latest",
+  "flag": "FLAG{chal02-file-perms}"
+}

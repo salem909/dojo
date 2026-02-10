@@ -1,0 +1,8 @@
+{
+  "id": "challenge05",
+  "name": "Strings in Binaries",
+  "description": "Use strings to extract a token from a binary.",
+  "categories": ["Simple binaries", "Strings"],
+  "image": "ctf/challenge05:latest",
+  "flag": "FLAG{chal05-strings}"
+}

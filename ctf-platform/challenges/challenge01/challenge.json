@@ -1,0 +1,8 @@
+{
+  "id": "challenge01",
+  "name": "Linux Basics",
+  "description": "Use basic shell commands to find a hidden token.",
+  "categories": ["Linux basics", "Shell usage"],
+  "image": "ctf/challenge01:latest",
+  "flag": "FLAG{chal01-linux-basics}"
+}

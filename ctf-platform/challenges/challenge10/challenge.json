@@ -1,0 +1,8 @@
+{
+  "id": "challenge10",
+  "name": "Debugging Basics",
+  "description": "Trace a binary to discover the expected token.",
+  "categories": ["Debugging basics"],
+  "image": "ctf/challenge10:latest",
+  "flag": "FLAG{chal10-debugging}"
+}

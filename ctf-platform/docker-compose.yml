@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  backend:
+    build: ./backend
+    environment:
+      - DATABASE_URL=sqlite:///./data/app.db
+      - SECRET_KEY=dev-secret-change
+      - ORCHESTRATOR_URL=http://orchestrator:8001
+      - ORCHESTRATOR_WS_URL=ws://orchestrator:8001
+      - ORCHESTRATOR_TOKEN=orch-dev-token
+    volumes:
+      - backend-data:/app/data
+      - ./challenges/challenges.json:/data/challenges.json:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      - orchestrator
+
+  orchestrator:
+    build: ./orchestrator
+    environment:
+      - ORCH_TOKEN=orch-dev-token
+      - CPU_LIMIT=0.5
+      - MEM_LIMIT=256m
+      - MAX_RUNTIME_SECONDS=3600
+      - SECCOMP_PROFILE_PATH=/workspaces/dojo/ctf-platform/orchestrator/seccomp.json
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./orchestrator/seccomp.json:/workspaces/dojo/ctf-platform/orchestrator/seccomp.json:ro
+    ports:
+      - "8001:8001"
+
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:

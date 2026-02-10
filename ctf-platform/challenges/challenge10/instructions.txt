@@ -1,0 +1,12 @@
+Challenge 10 - Debugging basics (ltrace/strace)
+
+Goal: Discover the expected token by tracing the binary.
+
+Hints:
+- /challenge/check compares your input to the token.
+- Use ltrace to observe strcmp arguments.
+
+Solve:
+ltrace -e strcmp /challenge/check
+# type anything to see the token in the trace
+# then pass the token to readflag

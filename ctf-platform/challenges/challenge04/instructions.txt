@@ -1,0 +1,10 @@
+Challenge 04 - Piping, redirection, file descriptors
+
+Goal: Capture the token from stderr and pipe it to readflag.
+
+Hints:
+- /challenge/emit_token.sh writes the token to stderr.
+- Use 2>&1 and a pipe, or redirect stderr to a file.
+
+Solve:
+/challenge/emit_token.sh 2>&1 | readflag

@@ -1,0 +1,8 @@
+{
+  "id": "challenge09",
+  "name": "PATH Hijacking",
+  "description": "Use PATH hijacking to run your helper as root.",
+  "categories": ["PATH hijacking"],
+  "image": "ctf/challenge09:latest",
+  "flag": "FLAG{chal09-path-hijack}"
+}

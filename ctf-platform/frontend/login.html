@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <h1>Login / Register</h1>
+      <div class="grid">
+        <form id="login-form" class="card">
+          <h2>Login</h2>
+          <label>Username<input name="username" required /></label>
+          <label>Password<input type="password" name="password" required /></label>
+          <button class="button" type="submit">Login</button>
+        </form>
+        <form id="register-form" class="card">
+          <h2>Register</h2>
+          <label>Username<input name="username" required /></label>
+          <label>Password<input type="password" name="password" required /></label>
+          <button class="button" type="submit">Register</button>
+        </form>
+      </div>
+      <p id="status"></p>
+    </main>
+    <script src="app.js"></script>
+    <script>
+      setupAuthForms();
+    </script>
+  </body>
+</html>

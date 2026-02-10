@@ -1,0 +1,14 @@
+Challenge 08 - Basic scripting
+
+Goal: Write a quick script or one-liner to extract the token from logs.txt.
+
+Hints:
+- The token appears once as TOKEN=... in /challenge/logs.txt
+
+Solve (example):
+python3 - <<'PY'
+import re
+text = open('/challenge/logs.txt').read()
+print(re.search(r'TOKEN=(\S+)', text).group(1))
+PY
+# Then pipe to readflag

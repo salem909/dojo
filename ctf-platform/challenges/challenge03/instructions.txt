@@ -1,0 +1,10 @@
+Challenge 03 - Environment variables
+
+Goal: Read the TOKEN environment variable and pass it to readflag.
+
+Hints:
+- The value is exported in your shell environment.
+- Use printenv or echo $TOKEN.
+
+Solve:
+printenv TOKEN | readflag

@@ -1,0 +1,10 @@
+Challenge 07 - Intro web, curl, HTTP headers
+
+Goal: Start the local web server and fetch the token with a custom header.
+
+Hints:
+- Run: python3 /challenge/webserver.py
+- The server expects header X-CTF-Key: open-sesame
+
+Solve (in another terminal):
+curl -H "X-CTF-Key: open-sesame" http://127.0.0.1:8080 | readflag

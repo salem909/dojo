@@ -1,0 +1,82 @@
+[
+  {
+    "id": "challenge01",
+    "name": "Linux Basics",
+    "description": "Use basic shell commands to find a hidden token.",
+    "categories": ["Linux basics", "Shell usage"],
+    "image": "ctf/challenge01:latest",
+    "flag": "FLAG{chal01-linux-basics}"
+  },
+  {
+    "id": "challenge02",
+    "name": "File Permissions",
+    "description": "Execute a helper with restricted permissions to reveal the token.",
+    "categories": ["File permissions", "Permissions & users"],
+    "image": "ctf/challenge02:latest",
+    "flag": "FLAG{chal02-file-perms}"
+  },
+  {
+    "id": "challenge03",
+    "name": "Environment Variables",
+    "description": "Read a token from the environment and pass it to readflag.",
+    "categories": ["Environment variables"],
+    "image": "ctf/challenge03:latest",
+    "flag": "FLAG{chal03-env-vars}"
+  },
+  {
+    "id": "challenge04",
+    "name": "Piping and Redirection",
+    "description": "Capture a token from stderr with pipes and redirection.",
+    "categories": ["Piping", "Redirection", "File descriptor basics", "Shell usage"],
+    "image": "ctf/challenge04:latest",
+    "flag": "FLAG{chal04-fd-redir}"
+  },
+  {
+    "id": "challenge05",
+    "name": "Strings in Binaries",
+    "description": "Use strings to extract a token from a binary.",
+    "categories": ["Simple binaries", "Strings"],
+    "image": "ctf/challenge05:latest",
+    "flag": "FLAG{chal05-strings}"
+  },
+  {
+    "id": "challenge06",
+    "name": "Reversing and Crypto",
+    "description": "Decode a base64+XOR token with a provided script.",
+    "categories": ["Basic reversing", "Simple cryptography"],
+    "image": "ctf/challenge06:latest",
+    "flag": "FLAG{chal06-crypto}"
+  },
+  {
+    "id": "challenge07",
+    "name": "HTTP Headers",
+    "description": "Use curl and headers to fetch a token from a local web server.",
+    "categories": ["Intro web", "curl", "HTTP headers"],
+    "image": "ctf/challenge07:latest",
+    "flag": "FLAG{chal07-http-headers}"
+  },
+  {
+    "id": "challenge08",
+    "name": "Basic Scripting",
+    "description": "Write a quick script to extract a token from logs.",
+    "categories": ["Basic scripting"],
+    "image": "ctf/challenge08:latest",
+    "flag": "FLAG{chal08-scripting}"
+  },
+  {
+    "id": "challenge09",
+    "name": "PATH Hijacking",
+    "description": "Use PATH hijacking to run your helper as root.",
+    "categories": ["PATH hijacking"],
+    "image": "ctf/challenge09:latest",
+    "flag": "FLAG{chal09-path-hijack}"
+  },
+  {
+    "id": "challenge10",
+    "name": "Debugging Basics",
+    "description": "Trace a binary to discover the expected token.",
+    "categories": ["Debugging basics"],
+    "image": "ctf/challenge10:latest",
+    "flag": "FLAG{chal10-debugging}"
+  }
+]

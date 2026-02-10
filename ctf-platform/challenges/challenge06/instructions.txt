@@ -1,0 +1,10 @@
+Challenge 06 - Basic reversing + crypto
+
+Goal: Decode the token from encoded.txt and pass it to readflag.
+
+Hints:
+- See /challenge/decoder.py for the algorithm.
+- The data is base64 and XORed.
+
+Solve:
+python3 /challenge/decoder.py /challenge/encoded.txt | readflag

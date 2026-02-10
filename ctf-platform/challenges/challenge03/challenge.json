@@ -1,0 +1,8 @@
+{
+  "id": "challenge03",
+  "name": "Environment Variables",
+  "description": "Read a token from the environment and pass it to readflag.",
+  "categories": ["Environment variables"],
+  "image": "ctf/challenge03:latest",
+  "flag": "FLAG{chal03-env-vars}"
+}

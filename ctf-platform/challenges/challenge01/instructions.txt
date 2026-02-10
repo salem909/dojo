@@ -1,0 +1,10 @@
+Challenge 01 - Linux basics
+
+Goal: Find the hidden token and feed it to readflag.
+
+Hints:
+- Use ls -a to see hidden files.
+- Token file: /challenge/.hidden/token.txt
+
+Solve:
+cat /challenge/.hidden/token.txt | readflag

@@ -1,0 +1,10 @@
+Challenge 02 - File permissions
+
+Goal: Run the execute-only helper to reveal the token.
+
+Hints:
+- /challenge/runme has execute permission but no read permission.
+- Execute it to print the token.
+
+Solve:
+/challenge/runme | readflag

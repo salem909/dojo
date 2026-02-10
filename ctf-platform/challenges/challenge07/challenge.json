@@ -1,0 +1,8 @@
+{
+  "id": "challenge07",
+  "name": "HTTP Headers",
+  "description": "Use curl and headers to fetch a token from a local web server.",
+  "categories": ["Intro web", "curl", "HTTP headers"],
+  "image": "ctf/challenge07:latest",
+  "flag": "FLAG{chal07-http-headers}"
+}

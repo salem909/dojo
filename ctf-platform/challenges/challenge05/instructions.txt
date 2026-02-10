@@ -1,0 +1,10 @@
+Challenge 05 - Simple binaries and strings
+
+Goal: Extract the token from a binary using strings.
+
+Hints:
+- The token is embedded in /challenge/mystery.
+- Use: strings /challenge/mystery
+
+Solve:
+strings /challenge/mystery | grep token-05 | readflag
