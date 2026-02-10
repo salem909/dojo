@@ -1,5 +1,4 @@
 import datetime
-import json
 import uuid
 from pathlib import Path
 from typing import Any
@@ -19,8 +18,10 @@ def docker_client() -> docker.DockerClient:
 
 def _load_seccomp_profile() -> str:
     # Docker API expects the seccomp profile JSON string, not a file path.
-    data = Path(settings.seccomp_profile_path).read_text(encoding="utf-8")
-    return json.dumps(json.loads(data))
+    data = Path(settings.seccomp_profile_path).read_text(encoding="utf-8").strip()
+    if not data.startswith("{"):
+        raise ValueError("seccomp profile must be JSON, not a file path")
+    return data
 
 
 def create_instance(image: str, user_id: int, challenge_id: str, public_key: str | None) -> dict:
