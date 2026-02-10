@@ -1,0 +1,168 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:17.2
+    container_name: dojo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-ctfd}
+      POSTGRES_PASSWORD: ${DB_PASS:-ctfd}
+      POSTGRES_DB: ${DB_NAME:-ctfd}
+      PGUSER: ${DB_USER:-ctfd}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dojo_network
+
+  # Redis Cache
+  cache:
+    image: redis:7-alpine
+    container_name: dojo-cache
+    restart: unless-stopped
+    networks:
+      - dojo_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # CTFd Main Application with dojo_plugin
+  ctfd:
+    build: 
+      context: ./CTFd
+      dockerfile: Dockerfile
+    container_name: dojo-ctfd
+    restart: unless-stopped
+    user: root
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${DB_USER:-ctfd}:${DB_PASS:-ctfd}@db:5432/${DB_NAME:-ctfd}
+      REDIS_URL: redis://cache:6379
+      WORKERS: 4
+      LOG_FOLDER: /var/log/CTFd
+      UPLOAD_FOLDER: /var/uploads
+      SECRET_KEY: ${SECRET_KEY}
+      REVERSE_PROXY: "true"
+      DOJO_HOST: ${DOJO_HOST:-localhost}
+      WORKSPACE_HOST: ${WORKSPACE_HOST:-localhost}
+      WORKSPACE_SECRET: ${WORKSPACE_SECRET}
+      HOST_DATA_PATH: /data
+      INTERNET_FOR_ALL: ${INTERNET_FOR_ALL:-false}
+      DOJO_ENV: ${DOJO_ENV:-development}
+    volumes:
+      - ./CTFd/CTFd/plugins/dojo_plugin:/opt/CTFd/CTFd/plugins/dojo_plugin:ro
+      - ./CTFd/CTFd/themes/dojo_theme:/opt/CTFd/CTFd/themes/dojo_theme:ro
+      - ctfd_logs:/var/log/CTFd
+      - ctfd_uploads:/var/uploads
+      - /var/run/docker.sock:/var/run/docker.sock
+      - dojo_homes:/var/homes
+      - dojo_dojos:/var/dojos
+      - ./workspace_nodes.json:/var/workspace_nodes.json:ro
+      - ./user_firewall.allowed:/var/user_firewall.allowed:ro
+      - ./seccomp.json:/etc/docker/seccomp.json:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    networks:
+      - dojo_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Workspace Builder (Nix)
+  workspace-builder:
+    build: 
+      context: ./workspace
+      dockerfile: Dockerfile
+    container_name: dojo-workspace-builder
+    environment:
+      DOJO_WORKSPACE: ${DOJO_WORKSPACE:-default}
+    volumes:
+      - workspace_nix:/nix
+    networks:
+      - dojo_network
+
+  # Home Filesystem (for persistent user data)
+  homefs:
+    build:
+      context: ./homefs
+      dockerfile: Dockerfile
+    container_name: dojo-homefs
+    restart: unless-stopped
+    privileged: true
+    environment:
+      STORAGE_ROOT: /run/homefs
+      STORAGE_HOST: 192.168.42.1
+    volumes:
+      - homefs_storage:/run/homefs
+      - /var/run/docker/plugins:/var/run/docker/plugins
+    ports:
+      - "4201:4201"
+    networks:
+      - dojo_network
+
+  # SSH Access Service
+  sshd:
+    build:
+      context: ./sshd
+      dockerfile: Dockerfile
+    container_name: dojo-sshd
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://cache:6379
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ssh_host_keys:/home/hacker/.ssh
+    ports:
+      - "2222:22"
+    depends_on:
+      - cache
+      - ctfd
+    networks:
+      - dojo_network
+
+  # Nginx Workspace Proxy
+  nginx:
+    build:
+      context: ./nginx-workspace
+      dockerfile: Dockerfile
+    container_name: dojo-nginx
+    restart: unless-stopped
+    environment:
+      WORKSPACE_SECRET: ${WORKSPACE_SECRET}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx_conf:/etc/nginx/conf.d
+    depends_on:
+      - ctfd
+    networks:
+      - dojo_network
+
+networks:
+  dojo_network:
+    driver: bridge
+
+volumes:
+  db_data:
+  ctfd_logs:
+  ctfd_uploads:
+  workspace_nix:
+  dojo_homes:
+  dojo_dojos:
+  ssh_host_keys:
+  nginx_conf:
+  homefs_storage:
