@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://cm3ui0000001"]
+
+[ext_resource type="Script" path="res://scripts/puzzles/match3/match3_view.gd" id="1_m3v"]
+
+[node name="Match3UI" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+script = ExtResource("1_m3v")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -300.0
+offset_right = 240.0
+offset_bottom = 300.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+custom_constants/separation = 12
+
+[node name="ScoreLabel" type="Label" parent="Panel/VBox"]
+text = "Doubloons: 0"
+horizontal_alignment = 1
+
+[node name="Grid" type="GridContainer" parent="Panel/VBox"]
+columns = 6
+
+[node name="HintLabel" type="Label" parent="Panel/VBox"]
+text = "Click a tile, then an adjacent tile to swap."
+horizontal_alignment = 1
