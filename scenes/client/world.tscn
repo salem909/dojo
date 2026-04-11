@@ -1,0 +1,101 @@
+[gd_scene load_steps=11 format=3 uid="uid://cwld00000001"]
+
+[ext_resource type="Script" path="res://scripts/client/world.gd" id="1_wld"]
+[ext_resource type="Script" path="res://scripts/client/camera_rig.gd" id="2_cam"]
+[ext_resource type="PackedScene" uid="uid://cm3ui0000001" path="res://scenes/puzzles/match3/match3_ui.tscn" id="3_m3"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+sky_top_color = Color(0.20, 0.40, 0.65, 1)
+sky_horizon_color = Color(0.55, 0.70, 0.85, 1)
+ground_horizon_color = Color(0.30, 0.32, 0.30, 1)
+ground_bottom_color = Color(0.10, 0.12, 0.10, 1)
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.4
+tonemap_mode = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1"]
+size = Vector2(60, 60)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.32, 0.45, 0.30, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_station"]
+size = Vector3(1.4, 1.4, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_station"]
+albedo_color = Color(0.85, 0.55, 0.20, 1)
+emission_enabled = true
+emission = Color(0.4, 0.20, 0.05, 1)
+emission_energy_multiplier = 0.6
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_wld")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.354, 0.354, 0, 0.707, 0.707, -0.5, -0.612, 0.612, 0, 12, 0)
+shadow_enabled = true
+light_energy = 1.2
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_1")
+surface_material_override/0 = SubResource("StandardMaterial3D_ground")
+
+[node name="PlayerRoot" type="Node3D" parent="."]
+
+[node name="PuzzleStation" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.7, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="PuzzleStation"]
+mesh = SubResource("BoxMesh_station")
+surface_material_override/0 = SubResource("StandardMaterial3D_station")
+
+[node name="Label" type="Label3D" parent="PuzzleStation"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+billboard = 1
+text = "Bilging Pump"
+font_size = 36
+outline_size = 8
+
+[node name="CameraRig" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866, 0.5, 0, -0.5, 0.866, 0, 6, 8)
+script = ExtResource("2_cam")
+distance = 6.0
+height = 4.0
+smooth = 6.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HudLabel" type="Label" parent="UI"]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 700.0
+offset_bottom = 40.0
+text = "Connecting..."
+theme_override_font_sizes/font_size = 18
+
+[node name="PromptLabel" type="Label" parent="UI"]
+anchor_left = 0.5
+anchor_top = 0.85
+anchor_right = 0.5
+anchor_bottom = 0.85
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 32.0
+horizontal_alignment = 1
+text = ""
+theme_override_font_sizes/font_size = 22
+
+[node name="PuzzleUI" parent="UI" instance=ExtResource("3_m3")]
+visible = false

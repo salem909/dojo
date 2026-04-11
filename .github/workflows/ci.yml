@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, "claude/**" ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  godot-import:
+    name: Godot headless import + parse check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot 4.3
+        run: |
+          set -e
+          wget -q "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip" -O godot.zip
+          unzip -q godot.zip
+          sudo mv Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
+          sudo chmod +x /usr/local/bin/godot
+          godot --version
+
+      - name: Headless import (validates every .tscn / .gd)
+        run: |
+          # First import pass populates .godot/. Second pass should be clean.
+          godot --headless --import || true
+          godot --headless --quit-after 30 --import
+
+      - name: Match-3 logic unit tests
+        run: |
+          godot --headless --script res://tests/test_match3_logic.gd
+
+      - name: Network smoke test (server + client handshake)
+        run: |
+          mkdir -p logs
+          godot --headless -- --server --port 25555 > logs/srv.log 2>&1 &
+          SPID=$!
+          sleep 1.5
+          godot --headless --quit-after 240 -- --connect 127.0.0.1:25555 > logs/cli.log 2>&1 || true
+          kill $SPID 2>/dev/null || true
+          wait $SPID 2>/dev/null || true
+          echo "==SERVER=="; cat logs/srv.log
+          echo "==CLIENT=="; cat logs/cli.log
+          grep -q "spawned player peer=" logs/srv.log
+          grep -q "connected to server, local id=" logs/cli.log
+          grep -q "spawn peer=" logs/cli.log
