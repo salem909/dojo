@@ -21,7 +21,7 @@ custom_minimum_size = Vector2(360, 0)
 custom_constants/separation = 14
 
 [node name="Title" type="Label" parent="Center/VBox"]
-text = "DOJO MMO"
+text = "ATLARIOUS PUZZLES"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 48
 

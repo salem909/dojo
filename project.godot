@@ -1,12 +1,12 @@
 ; Engine configuration file.
 ; Generated for Godot 4.3
-; MMO 3D Puzzle Game (working title: dojo)
+; AtlariousPuzzles — a 3D MMO puzzle game
 
 config_version=5
 
 [application]
 
-config/name="Dojo MMO"
+config/name="AtlariousPuzzles"
 config/description="A 3D MMO puzzle game inspired by Puzzle Pirates."
 run/main_scene="res://scenes/boot/boot.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")

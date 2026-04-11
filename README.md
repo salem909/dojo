@@ -1,4 +1,4 @@
-# Dojo MMO
+# AtlariousPuzzles
 
 A 3D MMO puzzle game inspired by **Puzzle Pirates**, built with **Godot 4.3**.
 Players sail a shared world and play minigames at stations to earn rewards.
