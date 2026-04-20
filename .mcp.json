@@ -1,0 +1,49 @@
+{
+  "mcpServers": {
+    "context7": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ],
+      "env": {}
+    },
+    "superpowers": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "superpowers-mcp"
+      ],
+      "env": {}
+    },
+    "obsidian": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "obsidian-mcp",
+        "C:\\Users\\USER\\Documents\\Obsidian Vault"
+      ],
+      "env": {}
+    },
+    "ruflo": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "ruflo"
+      ],
+      "env": {}
+    }
+  }
+}

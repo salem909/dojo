@@ -72,10 +72,8 @@ func _on_tile_pressed(cell: Vector2i) -> void:
 	var dx: int = abs(cell.x - selected.x)
 	var dy: int = abs(cell.y - selected.y)
 	if dx + dy == 1:
-		# Send swap to network client.
-		var net := get_node_or_null("/root/World/NetworkClient")
-		if net != null:
-			net.send_match3_swap(selected, cell)
+		# Send swap to network client via Game autoload (avoids hardcoded scene path).
+		Game.client_send_match3_swap(selected, cell)
 		selected = Vector2i(-1, -1)
 		hint_label.text = ""
 	else:

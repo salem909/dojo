@@ -1,0 +1,79 @@
+[gd_scene load_steps=2 format=3 uid="uid://cchat0000001"]
+
+[ext_resource type="Script" path="res://scripts/client/chat_panel.gd" id="1_chat"]
+
+[node name="ChatPanel" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_chat")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -228.0
+offset_right = 432.0
+offset_bottom = -12.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="HistoryBox" type="PanelContainer" parent="VBox"]
+custom_minimum_size = Vector2(420, 176)
+mouse_filter = 2
+
+[node name="History" type="RichTextLabel" parent="VBox/HistoryBox"]
+bbcode_enabled = true
+scroll_following = true
+fit_content = false
+custom_minimum_size = Vector2(420, 176)
+theme_override_colors/default_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_font_sizes/normal_font_size = 14
+mouse_filter = 2
+
+[node name="InputLine" type="LineEdit" parent="VBox"]
+visible = false
+custom_minimum_size = Vector2(420, 28)
+max_length = 200
+placeholder_text = "Say something..."
+
+[node name="InvitePopup" type="ColorRect" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.3
+anchor_right = 0.5
+anchor_bottom = 0.3
+offset_left = -180.0
+offset_top = 0.0
+offset_right = 180.0
+offset_bottom = 160.0
+color = Color(0.08, 0.08, 0.12, 0.92)
+
+[node name="VBox" type="VBoxContainer" parent="InvitePopup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+alignment = 1
+
+[node name="Label" type="Label" parent="InvitePopup/VBox"]
+text = "Crew invite"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+
+[node name="HBox" type="HBoxContainer" parent="InvitePopup/VBox"]
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="Accept" type="Button" parent="InvitePopup/VBox/HBox"]
+custom_minimum_size = Vector2(100, 40)
+text = "Accept"
+
+[node name="Reject" type="Button" parent="InvitePopup/VBox/HBox"]
+custom_minimum_size = Vector2(100, 40)
+text = "Decline"

@@ -42,3 +42,8 @@ server_data/
 *.db
 *.sqlite
 logs/
+
+# Tooling noise
+docs/.Rhistory
+tools/.claude/
+.claude/

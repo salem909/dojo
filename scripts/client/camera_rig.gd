@@ -18,6 +18,6 @@ func set_target(node: Node3D) -> void:
 func _process(delta: float) -> void:
 	if target == null or not is_instance_valid(target):
 		return
-	var desired_pos: Vector3 = target.position + Vector3(0, height, distance)
+	var desired_pos: Vector3 = target.global_position + Vector3(0, height, distance)
 	position = position.lerp(desired_pos, clamp(delta * smooth, 0.0, 1.0))
-	look_at(target.position + Vector3(0, 1.0, 0), Vector3.UP)
+	look_at(target.global_position + Vector3(0, 1.0, 0), Vector3.UP)
